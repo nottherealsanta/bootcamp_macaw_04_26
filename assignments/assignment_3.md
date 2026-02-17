@@ -4,3 +4,5 @@
 
 but use only the following target
 G1 - first period grade (numeric: from 0 to 20)
+
+use the "student-mat.csv" file
