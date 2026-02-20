@@ -49,7 +49,6 @@ class DecisionTree:
     
     def _choices(self, y):
         counter = Counter(y)
-        
         value = counter.most_common(1)[0][0]
         print(value)
         return value
@@ -82,9 +81,8 @@ class DecisionTree:
         if len(left_indices) == 0 or len(right_indices) == 0:
             return 0
 
-        l_n , r_n = len(left_indices) , len(right_indices)
-        
         n = len(y)
+        l_n , r_n = len(left_indices) , len(right_indices)
         e_l , e_r = self._entropy(y[left_indices]), self._entropy(y[right_indices])
         children_entropy_weighted = e_l*(l_n/n) + e_r*(r_n/n)
         return parent_entropy - children_entropy_weighted
