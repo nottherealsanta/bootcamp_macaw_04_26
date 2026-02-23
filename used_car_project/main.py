@@ -42,7 +42,7 @@ class CarFeatures(BaseModel):
     Doors: int
     Previous_Owners: int
 
-model = joblib.load("./data/random_forest_model.pkl")
+model = joblib.load("../data/random_forest_model.pkl")
 
 @app.post("/predict")
 def predict_price(features: CarFeatures):
