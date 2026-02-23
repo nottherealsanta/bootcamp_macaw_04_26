@@ -12,3 +12,8 @@ uv add <package_name>
 ```
 uv run main.py
 ```
+
+# Assignment
+
+1. The best model possible
+2. create a function in main.py, that accepts a dataframe of n rows, and returns a series of n rows with the prediction.
