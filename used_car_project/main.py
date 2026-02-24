@@ -2,33 +2,15 @@ import joblib
 import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel
-
-# col_list = ['Mileage_km',
-#  'Year',
-#  'Fuel_Consumption_l',
-#  'Gears',
-#  'Power_hp',
-#  'Engine_Size_cc',
-#  'Cylinders',
-#  'Seats',
-#  'Doors',
-#  'Previous_Owners']
-
-# model = joblib.load("./data/random_forest_model.pkl")
-
-# def main():
-#     print("Hello from used-car-project!")
-#     inf_df = pd.read_csv("./data/inference_data.csv").sample(1)
-
-#     X = inf_df[col_list]
-
-#     predictions = model.predict(X)
-#     print(predictions)
-
-# if __name__ == "__main__":
-#     main()
+import logging
+import datetime
 
 app = FastAPI()
+
+# levels of logging: DEBUG, INFO, WARNING, ERROR, CRITICAL
+logging.basicConfig(level=logging.INFO, 
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', 
+                    handlers=[logging.FileHandler("app.log"), logging.StreamHandler()])
 
 class CarFeatures(BaseModel):
     Mileage_km: float
@@ -42,17 +24,35 @@ class CarFeatures(BaseModel):
     Doors: int
     Previous_Owners: int
 
-model = joblib.load("../data/random_forest_model.pkl")
+# model = joblib.load("./data/random_fores_model.pkl")
+try: 
+    model = joblib.load("./data/random_forest_model.pkl")
+except Exception as e:
+    raise RuntimeError(f"Error loading model: {e}")
+
 
 @app.post("/predict")
 def predict_price(features: CarFeatures):
-    print(features)
-    # Convert the features to a DataFrame
-    X = pd.DataFrame([features.dict()])
 
-    # Make predictions
-    predictions = model.predict(X)
-    return {"predicted_price": predictions[0]}
+    logging.info(f"Received features: {features}")
+    try:
+        # is Year > Current YEAR 
+        year = features.Year
+        current_year = datetime.datetime.now().year
+
+        if year > current_year:
+            logging.warning(f"Received year {year} is greater than the current year {current_year}")
+
+        # Convert the features to a DataFrame
+        X = pd.DataFrame([features.dict()])
+        logging.debug(f"X.shape: {X.shape}")
+
+        # Make predictions
+        predictions = model.predict(X)
+        return {"predicted_price": predictions[0]}
+    except Exception as e:
+        logging.error(f"Error making prediction: {e}")
+        return {"error": "An error occurred while making the prediction"}
 
 @app.get("/")
 def read_root():
