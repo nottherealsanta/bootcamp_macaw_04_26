@@ -18,3 +18,4 @@ use 'used_car_project' as reference
 - API 
   - Create the API 
   - Test with curl request command
+  - Add error handling and logging
