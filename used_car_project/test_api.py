@@ -105,7 +105,8 @@ def run_concurrent_requests(num_requests=100):
 
 if __name__ == "__main__":
     # Run 10 concurrent requests
-    results = run_concurrent_requests(1000)
+    run_concurrent_requests(1000)
+    
     
     # Optionally, you can adjust the number of requests
     # results = run_concurrent_requests(20)

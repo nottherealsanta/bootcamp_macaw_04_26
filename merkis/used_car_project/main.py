@@ -4,8 +4,10 @@ import pandas as pd
 import joblib
 import datetime
 from fastapi import FastAPI
+import sklearn
 
 app = FastAPI()
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  handlers=[logging.FileHandler("app.log")])
 
 class CarFeatures(BaseModel):
     Mileage_km: float
@@ -20,17 +22,24 @@ class CarFeatures(BaseModel):
     Previous_Owners: int
 
 try:
-    model = joblib.load(r'../../data/random_forest_model.pkl')
-except:
-    raise ImportError(f"Model was not loaded")
+    model = joblib.load(r'C:\Users\USER\Desktop\bootcamp_macaw_04_26\data\random_forest_model.pkl')
+except Exception as e:
+    raise RuntimeError(f"Error loading model: {e}")
 
 @app.post('/predict')
-def predict(features):
+def predict(features: CarFeatures):
+    try:
+        logging.info(f'Received features {features}')
+        X = pd.DataFrame([features.dict()])
+        print(X)
+        logging.debug(f"X.shape: {X.shape}")
+        predictions = model.predict(X)
+        print(predictions)
 
-    X = pd.DataFrame(features)
-    prediction = model(X)
-
-    return prediction
+        return {"Prediction": predictions[0]}
+    except Exception as e:
+        logging.error(f"Error making predictions {e}")
+        return {"Error": "An error occured while making the prediction"}
 
 @app.get('/')
 def landing():
