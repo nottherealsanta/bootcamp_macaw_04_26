@@ -2,4 +2,10 @@ jupyter
 ipykernel
 scikit-learn==1.8.0
 matplotlib
+<<<<<<< HEAD
 joblib
+=======
+pytest
+torch
+torchvision
+>>>>>>> 70e18b3b2fc83f449637eaeec5e42bec04c721d6
