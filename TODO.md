@@ -1,1 +1,1 @@
-- [ ] learn about git
+- [x] learn about git
